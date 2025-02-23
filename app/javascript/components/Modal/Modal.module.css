@@ -1,0 +1,11 @@
+.modal {
+  background-color: red;
+}
+
+.btnFound {
+  background-color: green;
+}
+
+.btnNotFound {
+  background-color: blue;
+}
