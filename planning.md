@@ -5,7 +5,9 @@
 - Large photograph with elements user meant to find
 - Use makes selections for each element and given feedback on whether correct or not
   - User clicks a photo, targeting box around that portion of photo appears
+    - [I don't understand the point of having a targetting box appear? The user knows where they clicked, and the goal is to click on the element - not to create a targetting box that includes the element. I won't add this.]
   - Box includes list of possible elements
+    - [Again I don't understand this requirement. Instead, I'll make a selection box that allows user to choose the element they think they have clicked on. This means the user can't just click randomly and complete the challenge.]
 
 ## Steps
 
@@ -15,21 +17,34 @@
   - DONE Home page with link to photo page
   - DONE Photo page shows image
   - DONE Click coordinates can be tested against a target location, scaling with image size
-  - Add functionality to click a photo, show targeting box with options, choose option, remove targeting box
-  - Hard coded coordinates for elements
-  - Add error messages / success markers
-- Build back end
-  - Add coordinates to database
-  - Add validation if clicked correct place
-    - Normalize across different screen sizes
+  - DONE Add functionality to click a photo, choose option
+  - DONE Hard coded coordinates for elements
+  - **Add error messages / success markers**
+- DONE Build back end
+  - DONE Add coordinates to database
+  - DONE Add validation if clicked correct place
+    - DONE Normalize across different screen sizes - (normalization handled in React, as front end know image location and size on screen)
 - Tie back and front end together
-  - State includes the coordinates for elements
-  - Front end calls back end to validate selections
+  - DONE Front end calls back end to validate selections
   - Add time tracking on the server side from page load until all elements identified
-  - Add on completion of round, popup asks for name and record time
-  - Deal with anonymous users
+    - DONE On page load, send a message to backend to add a "score" record, which will then have a "created_at" field.
+      - DONE Store the id of the record in useState.
+    - On finding all items
+      - DONE Send a message to the server to update the "score" record with the completed time
+      - DONE Report the score to the user
+      - Modal Form allowing user to input a name for their high-score
+      - When game over, show a form asking the user to enter their name or initials for their score.
+        - If they don't enter a name... save as "Anonymous"
+      - Then redirect to a victory page:
+        - Show scores recorded against this image
+        - Show all-time high score and today high score
+        - Links to try same image again or return to homepage
+    - Add visual elements
+      - DONE Add a visible timer on the image page
+      - DONE Timer stops when all items found
+      - Timer matches the server time for score!
 - Load more images into database
-- Add photo selection screen
+- DONE Add photo selection screen
 - Add score / time tracking to photo selection screen
   - All time high score
   - Today high score
@@ -38,27 +53,41 @@
 
 ### General Approach
 
+INITIAL
+
 I'll use the basic structure shown in the rails_react_recipe tutorial. This means a Rails app where the index.html is completely taken over by React.
 
 I think this means I have to start by making a Rails app, following the steps to get React to take over front end, and then go ahead and build it within the javascript folder.
 
+AFTER BASICS COMPLETE
+
+When a user completes a seek-and-find, need to add a congratulations or success message.
+
 ### Database
 
-Images
+Image
 
 - id
 - src (url)
 - title (text)
-- elements (json/array of objects)
-  - name (object)
-  - x-min (whole number)
-  - x-max (whole number)
-  - y-min (whole number)
-  - y-max (whole number)
-  
-Scores
+- width (in pixels - whole number)
+- height (in pixels - whole number)
 
-- image.id
+has_many: elements
+has_many: scores
+
+Element
+
+- image_id
+- name (object)
+- x1 (whole number)
+- x2 (whole number)
+- y1 (whole number)
+- y2 (whole number)
+
+Score
+
+- image_id
 - date
 - name (text)
 - time (number of seconds)

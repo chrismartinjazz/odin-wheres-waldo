@@ -4,8 +4,9 @@ import styles from "./Modal.module.css";
 export default function Modal({
   isOpen,
   onClose,
-  imageData,
-  handleClickModal,
+  image,
+  foundElementIds,
+  handleChooseElement,
 }) {
   const modalRef = useRef(null);
 
@@ -38,12 +39,16 @@ export default function Modal({
       onKeyDown={handleKeyDown}
       className={`${styles.modal}`}
     >
-      {imageData.elements.map((element, id) => {
+      {image?.elements?.map((element) => {
         return (
           <button
-            className={element.found ? styles.btnFound : styles.btnNotFound}
-            key={element.name}
-            onClick={() => handleClickModal(id)}
+            className={
+              foundElementIds.includes(element.id)
+                ? styles.btnFound
+                : styles.btnNotFound
+            }
+            key={element.id}
+            onClick={() => handleChooseElement(element.id)}
           >
             {element.name}
           </button>
