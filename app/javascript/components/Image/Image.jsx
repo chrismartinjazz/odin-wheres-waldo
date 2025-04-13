@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./Image.module.css";
 import Modal from "../Modal/Modal.jsx";
+import ModalGameOver from "../ModalGameOver/ModalGameOver.jsx";
 import Timer from "../Timer/Timer.jsx";
 
 export default function Image() {
@@ -9,9 +10,10 @@ export default function Image() {
   const navigate = useNavigate();
 
   const [image, setImage] = useState({ image: "" });
+  const [score, setScore] = useState(null);
   const [foundElementIds, setFoundElementIds] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [scoreId, setScoreId] = useState(null);
+  const [isModalGameOverOpen, setModalGameOverOpen] = useState(false);
   const [timerRunning, setTimerRunning] = useState(false);
 
   const coordinatesRef = useRef(null);
@@ -53,10 +55,9 @@ export default function Image() {
         throw new Error("Network response was not ok. Failed to create score.");
       })
       .then((response) => {
-        setScoreId(response.id);
+        setScore(response);
         setTimerRunning(true);
       })
-      // .catch(() => navigate("/"));
       .catch((error) => console.log(error));
   }, [params.id]);
 
@@ -78,8 +79,8 @@ export default function Image() {
     };
   }
 
-  // When the user has chosen an element, close the modal, check the chosen
-  // (normalised) coordinates with the database, and
+  // When the user has chosen an element, close the modal, and check the
+  // coordinates with the database
   function handleChooseElement(id) {
     setModalOpen(false);
     checkCoordinates(id, coordinatesRef.current.x, coordinatesRef.current.y);
@@ -127,7 +128,7 @@ export default function Image() {
     setTimerRunning(false);
 
     const token = document.querySelector('meta[name="csrf-token"]').content;
-    const body = JSON.stringify({ id: scoreId });
+    const body = JSON.stringify({ id: score.id });
     const url = "/api/v1/scores/update";
     const header = {
       method: "PATCH",
@@ -146,6 +147,7 @@ export default function Image() {
         throw new Error("Network response was not ok. Failed to update score.");
       })
       .then((response) => {
+        setScore(response);
         console.log(response);
       })
       .catch((error) => console.log(error));
@@ -170,6 +172,7 @@ export default function Image() {
         foundElementIds={foundElementIds}
         handleChooseElement={handleChooseElement}
       />
+      <ModalForm />
       <Timer timerRunning={timerRunning} />
       <div>Score ID: {scoreId ? scoreId : "Loading..."}</div>
       <div>Elements found: {foundElementIds.length}</div>

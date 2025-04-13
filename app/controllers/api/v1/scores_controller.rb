@@ -4,7 +4,7 @@ class Api::V1::ScoresController < ApplicationController
     if image
       score = image.scores.create!(score_params)
       if score
-        render json: { id: score.id }, status: :created
+        render json: { score: score }, status: :created
       else
         render json: score.errors, status: :unprocessable_entity
       end

@@ -33,7 +33,7 @@
       - DONE Send a message to the server to update the "score" record with the completed time
       - DONE Report the score to the user
       - Modal Form allowing user to input a name for their high-score
-      - When game over, show a form asking the user to enter their name or initials for their score.
+      - **When game over, show a form asking the user to enter their name or initials for their score.**
         - If they don't enter a name... save as "Anonymous"
       - Then redirect to a victory page:
         - Show scores recorded against this image
