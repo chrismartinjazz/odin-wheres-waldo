@@ -37,7 +37,7 @@ export default function Image() {
   // Add a new (blank) score to the database and store its id, then start the timer
   useEffect(() => {
     const token = document.querySelector('meta[name="csrf-token"]').content;
-    const url = `/api/v1/scores/create`;
+    const url = `/api/v1/scores`;
     const header = {
       method: "POST",
       headers: {
@@ -55,6 +55,7 @@ export default function Image() {
         throw new Error("Network response was not ok. Failed to create score.");
       })
       .then((response) => {
+        console.log(response);
         setScore(response);
         setTimerRunning(true);
       })
@@ -124,12 +125,13 @@ export default function Image() {
   }
 
   function handleGameOver() {
-    console.log("You win!");
     setTimerRunning(false);
 
+    // Update the score in the database and component.
     const token = document.querySelector('meta[name="csrf-token"]').content;
+    const id = score.id;
+    const url = `/api/v1/scores/${id}`;
     const body = JSON.stringify({ id: score.id });
-    const url = "/api/v1/scores/update";
     const header = {
       method: "PATCH",
       headers: {
@@ -148,7 +150,7 @@ export default function Image() {
       })
       .then((response) => {
         setScore(response);
-        console.log(response);
+        setModalGameOverOpen(true);
       })
       .catch((error) => console.log(error));
   }
@@ -172,9 +174,13 @@ export default function Image() {
         foundElementIds={foundElementIds}
         handleChooseElement={handleChooseElement}
       />
-      <ModalForm />
+      <ModalGameOver
+        isOpen={isModalGameOverOpen}
+        onClose={() => setModalGameOverOpen(false)}
+        score={score}
+      />
       <Timer timerRunning={timerRunning} />
-      <div>Score ID: {scoreId ? scoreId : "Loading..."}</div>
+      <div>Score ID: {score ? score.id : "Loading..."}</div>
       <div>Elements found: {foundElementIds.length}</div>
       <div>Total Elements: {image?.elements?.length}</div>
     </>

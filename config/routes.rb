@@ -4,9 +4,7 @@ Rails.application.routes.draw do
       get 'images/index'
       get 'show/:id', to: 'images#show'
       post 'elements/check', to: 'elements#check_coordinates'
-      post 'scores/create'
-      patch 'scores/update'
-      # resources :scores, only: [:create]
+      resources :scores, only: [:create, :update]
     end
   end
   root 'homepage#index'

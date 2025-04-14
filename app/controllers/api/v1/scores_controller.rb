@@ -4,7 +4,7 @@ class Api::V1::ScoresController < ApplicationController
     if image
       score = image.scores.create!(score_params)
       if score
-        render json: { score: score }, status: :created
+        render json: score, status: :created
       else
         render json: score.errors, status: :unprocessable_entity
       end
@@ -18,7 +18,7 @@ class Api::V1::ScoresController < ApplicationController
     if score
       elapsed_time = Time.now() - score[:created_at]
       score.update(time: elapsed_time)
-      render json: { score: score }
+      render json: score
     else
       render json: score.errors, status: :unprocessable_entity
     end

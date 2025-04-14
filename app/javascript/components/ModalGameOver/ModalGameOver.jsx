@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function ModalForm({ isOpen, onClose, scoreId }) {
+export default function ModalForm({ isOpen, onClose, score }) {
   const [name, setName] = useState("Anonymous");
   const modalRef = useRef(null);
 
@@ -29,7 +29,7 @@ export default function ModalForm({ isOpen, onClose, scoreId }) {
 
   return (
     <dialog ref={modalRef} onKeyDown={handleKeyDown}>
-      Test
+      <div>Your time: {score ? score.time : "Loading..."}</div>
       <button onClick={handleCloseModal}>Cancel</button>
     </dialog>
   );
